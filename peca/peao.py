@@ -20,8 +20,8 @@ class Peao(Peca):
                 self.atualizar_lista_de_possiveis_coordenadas_peao_branco()
             
             case ut.EnumCor.PRETO:
-                pass
-
+                self.atualizar_lista_de_possiveis_coordenadas_peao_preto()
+            
             case _:
                 pass
     
@@ -33,3 +33,12 @@ class Peao(Peca):
         
         if not self.ja_movimentou:
             self.lista_de_posssiveis_movimentos.append(Coordenada(linha_atual - 2, coluna_atual))
+
+    def atualizar_lista_de_possiveis_coordenadas_peao_preto(self):
+        linha_atual = self.coordenada_atual.linha
+        coluna_atual = self.coordenada_atual.coluna
+
+        self.lista_de_posssiveis_movimentos = [Coordenada(linha_atual + 1, coluna_atual)]
+        
+        if not self.ja_movimentou:
+            self.lista_de_posssiveis_movimentos.append(Coordenada(linha_atual + 2, coluna_atual))
