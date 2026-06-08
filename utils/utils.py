@@ -1,4 +1,3 @@
-from typing import Literal
 from enum import Enum
 
 def validar_string(string: str) -> bool:
@@ -21,4 +20,3 @@ class EnumCaracteres(Enum):
     PEAO_PRETO = "♟"
     CAVALO_BRANCO = "♘"
     CAVALO_PRETO = "♞"
-    

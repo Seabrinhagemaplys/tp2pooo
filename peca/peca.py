@@ -9,7 +9,7 @@ class Peca(ABC):
 
     @property
     def caractere(self):
-        return self._caractere.value
+        return self._caractere
     
     @caractere.setter
     def caractere(self, novo_caractere: ut.EnumCaracteres):
