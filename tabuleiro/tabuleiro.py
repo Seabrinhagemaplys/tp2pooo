@@ -6,6 +6,7 @@ from peca.cavalo import Cavalo
 from peca.bispo import Bispo
 from peca.rainha import Rainha
 from peca.rei import Rei
+from coordenada.coordenada import Coordenada
 
 from typing import Literal
 
@@ -65,3 +66,27 @@ class Tabueiro:
             string_tabuleiro += "\n"
 
         return string_tabuleiro
+    
+    def posicao_esta_ocupada(self, coordenada: Coordenada) -> bool:
+        """
+        Verifica se uma casa no tabuleiro está ocupada por uma peça
+        """
+        if self.matriz_pecas[coordenada.linha][coordenada.coluna] is not None:
+            return True
+        
+        return False
+    
+    def mover_peca(self, coordenada_origem: Coordenada, coordenada_destino: Coordenada) -> Peca | None:
+        """
+        Move uma peça no tabuleiro e retorna a peça comida, caso haja e None caso contrário
+        """
+        if self.matriz_pecas[coordenada_origem.linha][coordenada_origem.coluna] is None:
+            raise ValueError("Não se pode mexer nada")
+
+        peca_movida = self.matriz_pecas[coordenada_origem.linha][coordenada_origem.coluna]
+        peca_tomada = None if self.matriz_pecas[coordenada_destino.linha][coordenada_destino.coluna] is None else self.matriz_pecas[coordenada_destino.linha][coordenada_destino.coluna]
+
+        self.matriz_pecas[coordenada_origem.linha][coordenada_origem.coluna] = None
+        self.matriz_pecas[coordenada_destino.linha][coordenada_destino.coluna] = peca_movida
+
+        return peca_tomada
