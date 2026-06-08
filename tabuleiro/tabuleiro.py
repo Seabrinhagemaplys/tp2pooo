@@ -56,9 +56,12 @@ class Tabueiro:
             return f"|{caractere} |"
 
         string_tabuleiro: str = ""
+        inicio: int = 0 if lado == ut.EnumCor.BRANCO else 7
+        fim: int = 8 if lado == ut.EnumCor.BRANCO else -1
+        passo: int = 1 if lado == ut.EnumCor.BRANCO else -1
 
-        for i in range(8):
-            for j in range(8):
+        for i in range(inicio, fim, passo):
+            for j in range(inicio, fim, passo):
                 if (self.matriz_pecas[i][j] is not None):
                     string_tabuleiro += formatar_casa(self.matriz_pecas[i][j].caractere.value)
                 else:
