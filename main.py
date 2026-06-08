@@ -1,7 +1,7 @@
-from peca.bispo import Bispo
+from peca.torre import Torre
 import utils.utils as ut
 
-b = Bispo(ut.EnumCor.PRETO)
+b = Torre(ut.EnumCor.BRANCO)
 
 print(b.caractere.value)
 
