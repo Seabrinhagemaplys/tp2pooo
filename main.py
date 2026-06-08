@@ -1,7 +1,7 @@
-from peca.rainha import Rainha
+from peca.rei import Rei
 import utils.utils as ut
 
-b = Rainha(ut.EnumCor.PRETO)
+b = Rei(ut.EnumCor.BRANCO)
 
 print(b.caractere.value)
 
