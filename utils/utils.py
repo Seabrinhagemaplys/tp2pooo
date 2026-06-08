@@ -1,15 +1,6 @@
 from enum import Enum
+from collections.abc import Callable
 
-def validar_string(string: str) -> bool:
-    """
-    Valida se uma string está vazia e se o objeto passado é uma instância de string
-    """
-    if not string.strip():
-        return False
-    if not isinstance(string, str):
-        return False
-    
-    return True
 
 class EnumCor(Enum):
     BRANCO = "Branco"
@@ -28,3 +19,25 @@ class EnumCaracteres(Enum):
     RAINHA_PRETO = "♛"
     REI_BRANCO = "♔"
     REI_PRETO = "♚"
+
+
+def validar_string(string: str) -> bool:
+    """
+    Valida se uma string está vazia e se o objeto passado é uma instância de string
+    """
+    if not string.strip():
+        return False
+    if not isinstance(string, str):
+        return False
+    
+    return True
+
+def checar_instancia_int(numero: int) -> bool:
+    """
+    Checa se um objeto é um inteiro e retorna booleano associado ao resultado
+    """
+    if not isinstance(numero, int):
+        return False
+    
+    return True
+    
