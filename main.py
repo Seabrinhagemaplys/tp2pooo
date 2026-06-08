@@ -1,9 +1,5 @@
-from peca.peao import Peao
+from tabuleiro.tabuleiro import Tabueiro
 import utils.utils as ut
-from peca.cavalo import Cavalo
 
-peao_novo = Peao(ut.EnumCor.PRETO)
-
-cavalo_novo = Cavalo(ut.EnumCor.BRANCO)
-
-print(cavalo_novo.caractere)
+tb = Tabueiro()
+print(tb.gerar_string_tabuleiro(ut.EnumCor.BRANCO))
