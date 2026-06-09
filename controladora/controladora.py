@@ -60,6 +60,9 @@ class Controladora:
         if not self.tabuleiro.posicao_esta_ocupada(coordenada_origem):
             return False
         
+        if not (self.tabuleiro.get_peca_na_posicao(coordenada_origem).cor == self.lado):
+            return False
+        
         return True
 
     def montar_jogada(self):
