@@ -39,8 +39,6 @@ class Peao(Peca):
         self.lista_de_posssiveis_movimentos = []
 
         self.tentar_adicionar(linha_atual - 1, coluna_atual)
-        self.tentar_adicionar(linha_atual - 1, coluna_atual + 1)
-        self.tentar_adicionar(linha_atual - 1, coluna_atual - 1)
 
         if not self.ja_movimentou:
             self.tentar_adicionar(linha_atual - 2, coluna_atual)
@@ -48,8 +46,8 @@ class Peao(Peca):
     def atualizar_lista_de_possiveis_coordenadas_peao_preto(self):
         linha_atual = self.coordenada_atual.linha
         coluna_atual = self.coordenada_atual.coluna
+        self.lista_de_posssiveis_movimentos = []
 
-        self.lista_de_posssiveis_movimentos = [Coordenada(linha_atual + 1, coluna_atual)]
-        
+        self.tentar_adicionar(linha_atual + 1, coluna_atual)
         if not self.ja_movimentou:
-            self.lista_de_posssiveis_movimentos.append(Coordenada(linha_atual + 2, coluna_atual))
+            self.tentar_adicionar(linha_atual + 2, coluna_atual)
