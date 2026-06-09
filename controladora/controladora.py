@@ -56,6 +56,11 @@ class Controladora:
             case _:
                 pass
 
+
+    #
+    # VALIDAR DEPENDE DE MUITA COISA PRECISAMOS INCREMENTAR
+    #
+
     def validar_jogada(self, coordenada_origem: Coordenada, coordenada_destino: Coordenada):
         if not self.tabuleiro.posicao_esta_ocupada(coordenada_origem):
             return False
