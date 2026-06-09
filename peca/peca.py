@@ -8,7 +8,7 @@ class Peca(ABC):
         self._cor = cor
         self._coordenada_atual = coordenada
 
-        self.lista_de_posssiveis_movimentos: list[Coordenada]
+        self.lista_de_posssiveis_movimentos: list[Coordenada] = []
         self.atualizar_lista_de_possiveis_coordenadas()
 
     # PROPRIEDADES
