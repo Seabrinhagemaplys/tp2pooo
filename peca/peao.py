@@ -49,5 +49,6 @@ class Peao(Peca):
         self.lista_de_posssiveis_movimentos = []
 
         self.tentar_adicionar(linha_atual + 1, coluna_atual)
+        
         if not self.ja_movimentou:
             self.tentar_adicionar(linha_atual + 2, coluna_atual)
