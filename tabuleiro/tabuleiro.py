@@ -70,6 +70,15 @@ class Tabueiro:
 
         return string_tabuleiro
     
+    def get_peca_na_posicao(self, coordenada: Coordenada) -> Peca:
+        """
+        Retorna a peça que está em uma coordenada e lança uma exceção do tipo ValueError caso não haja peça na coordenada passada
+        """
+        if not self.posicao_esta_ocupada(coordenada):
+            raise ValueError("Não há peça na posição")
+        
+        return self.matriz_pecas[coordenada.linha][coordenada.coluna] 
+    
     def posicao_esta_ocupada(self, coordenada: Coordenada) -> bool:
         """
         Verifica se uma casa no tabuleiro está ocupada por uma peça
