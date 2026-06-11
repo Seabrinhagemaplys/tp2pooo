@@ -1,5 +1,7 @@
 from tabuleiro.tabuleiro import Tabueiro
 from coordenada.coordenada import Coordenada
+from peca.peca import Peca
+from peca.peao import Peao
 import utils.utils as ut
 
 class Controladora:
@@ -62,11 +64,23 @@ class Controladora:
     #
 
     def validar_jogada(self, coordenada_origem: Coordenada, coordenada_destino: Coordenada):
+        """
+        Função que checa se uma jogada é válida ou não
+        """
+        peca_a_ser_movida: Peca = self.tabuleiro.get_peca_na_posicao(coordenada_origem)
+        
         if not self.tabuleiro.posicao_esta_ocupada(coordenada_origem):
             return False
         
-        if not (self.tabuleiro.get_peca_na_posicao(coordenada_origem).cor == self.lado):
+        if not (peca_a_ser_movida.cor == self.lado):
             return False
+        
+        if not (coordenada_destino in peca_a_ser_movida.lista_de_posssiveis_movimentos):
+            return False
+        
+        # checagens exclusivas de peão
+        if isinstance(peca_a_ser_movida, Peao):
+            pass
         
         return True
 
@@ -91,8 +105,6 @@ class Controladora:
         """
         Inicia o loop de jogo
         """
-        contador: int = 0
-
         while self.jogo_em_andamento:
             self.mostrar_tabuleiro()
             coordenada_origem, coordenada_destino = self.montar_jogada()
