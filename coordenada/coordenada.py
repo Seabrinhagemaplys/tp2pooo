@@ -31,4 +31,8 @@ class Coordenada:
         
         self.__coluna = nova_coluna
     
-    
+    def __eq__(self, other):
+        if not isinstance(other, Coordenada):
+            raise TypeError("Não há como determinar igualdade entre uma coordenada e outro objeto de outro tipo")
+
+        return (self.linha == other.linha) and (self.coluna == other.coluna)
