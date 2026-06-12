@@ -45,6 +45,15 @@ class Peca(ABC):
         
     #METODOS
 
+    def tentar_adicionar(self, linha: int, coluna: int):
+        """
+        Adiciona coordenada à lista somente se for válida no tabuleiro.
+        """
+        try:
+            self.lista_de_posssiveis_movimentos.append(Coordenada(linha, coluna))
+        except Exception as e:
+            pass
+
     @abstractmethod
     def atualizar_lista_de_possiveis_coordenadas(self):
         pass

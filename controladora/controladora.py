@@ -29,11 +29,11 @@ class Controladora:
                 return False
             if len(lista_entrada) != 2:
                 return False
-            for parte_da_entrada in lista_entrada:
-                if not parte_da_entrada.isnumeric():
-                    return False
-                if not int(parte_da_entrada) in range(1, 9):
-                    return False
+            # for parte_da_entrada in lista_entrada:
+            #     if not parte_da_entrada.isnumeric():
+            #         return False
+            #     if not int(parte_da_entrada) in range(1, 9):
+            #         return False
                 
             return True
             
@@ -67,20 +67,27 @@ class Controladora:
         """
         Função que checa se uma jogada é válida ou não
         """
-        peca_a_ser_movida: Peca = self.tabuleiro.get_peca_na_posicao(coordenada_origem)
-        
         if not self.tabuleiro.posicao_esta_ocupada(coordenada_origem):
+            print("Não há peça nesta posição")
             return False
         
+        peca_a_ser_movida: Peca = self.tabuleiro.get_peca_na_posicao(coordenada_origem)
+        
         if not (peca_a_ser_movida.cor == self.lado):
+            print(f"A cor da peça é {peca_a_ser_movida.cor} mas é a vez de {self.lado}")
             return False
         
         if not (coordenada_destino in peca_a_ser_movida.lista_de_posssiveis_movimentos):
+            print("A coordenada de destino não está na lista de possíveis movimentos da peça")
+            return False
+        
+        if (coordenada_origem == coordenada_destino):
+            print("Não se pode mover uma peça para o mesmo lugar")
             return False
         
         # checagens exclusivas de peão
-        if isinstance(peca_a_ser_movida, Peao):
-            pass
+        # if isinstance(peca_a_ser_movida, Peao):
+        #     pass
         
         return True
 

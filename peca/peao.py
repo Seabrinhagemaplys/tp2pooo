@@ -24,15 +24,6 @@ class Peao(Peca):
             case _:
                 pass
 
-    def tentar_adicionar(self, linha: int, coluna: int):
-        """
-        Adiciona coordenada à lista somente se for válida no tabuleiro.
-        """
-        try:
-            self.lista_de_posssiveis_movimentos.append(Coordenada(linha, coluna))
-        except Exception as e:
-            pass
-
     def atualizar_lista_de_possiveis_coordenadas_peao_branco(self):
         linha_atual = self.coordenada_atual.linha
         coluna_atual = self.coordenada_atual.coluna

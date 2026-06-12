@@ -10,3 +10,6 @@ class Rei(Peca):
             cor=cor,
             coordenada=coordenada_inicial
         ) 
+
+    def atualizar_lista_de_possiveis_coordenadas(self):
+        pass
