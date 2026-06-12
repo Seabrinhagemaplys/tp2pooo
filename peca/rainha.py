@@ -69,3 +69,15 @@ class Rainha(Peca):
             adicionar_posicao_menos_mais(linha, coluna)
             adicionar_posicao_menos_menos(linha, coluna)
         
+        def calcular_linha_e_coluna(linha, coluna):
+            for i in range(0, 8):
+                self.tentar_adicionar(i, coluna)
+
+            for j in range(0, 8):
+                self.tentar_adicionar(linha, j)
+        self.lista_de_posssiveis_movimentos = []
+        linha_atual: int = self.coordenada_atual.linha
+        coluna_atual: int = self.coordenada_atual.coluna
+
+        calcular_diagonais(linha_atual, coluna_atual)
+        calcular_linha_e_coluna(linha_atual, coluna_atual)

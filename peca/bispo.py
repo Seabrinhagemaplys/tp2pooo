@@ -11,6 +11,7 @@ class Bispo(Peca):
         ) 
 
     def atualizar_lista_de_possiveis_coordenadas(self):
+        self.lista_de_posssiveis_movimentos = []
         linha_atual: int = self.coordenada_atual.linha
         coluna_atual: int = self.coordenada_atual.coluna
 
