@@ -1,8 +1,8 @@
-from peca.rainha import Rainha
+from peca.torre import Torre
 import utils.utils as ut
 from coordenada.coordenada import Coordenada
  
-c = Rainha(ut.EnumCor.BRANCO, Coordenada(3, 0))
+c = Torre(ut.EnumCor.BRANCO, Coordenada(5, 3))
 
 print(len(c.lista_de_posssiveis_movimentos))
 

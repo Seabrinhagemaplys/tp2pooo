@@ -50,7 +50,10 @@ class Peca(ABC):
         Adiciona coordenada à lista somente se for válida no tabuleiro.
         """
         try:
-            self.lista_de_posssiveis_movimentos.append(Coordenada(linha, coluna))
+            coordenada = Coordenada(linha, coluna)
+
+            if (coordenada not in self.lista_de_posssiveis_movimentos) and (coordenada != self.coordenada_atual):
+                self.lista_de_posssiveis_movimentos.append(coordenada)
         except Exception as e:
             pass
 
