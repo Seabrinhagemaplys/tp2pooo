@@ -12,4 +12,11 @@ class Torre(Peca):
         ) 
 
     def atualizar_lista_de_possiveis_coordenadas(self):
-        pass
+        linha_atual: int = self.coordenada_atual.linha
+        coluna_atual: int = self.coordenada_atual.coluna
+        
+        for i in range(0, 8):
+            self.tentar_adicionar(i, coluna_atual)
+
+        for j in range(0, 8):
+            self.tentar_adicionar(linha_atual, j)

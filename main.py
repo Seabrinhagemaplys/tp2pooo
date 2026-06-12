@@ -1,8 +1,8 @@
-from peca.cavalo import Cavalo
+from peca.torre import Torre
 import utils.utils as ut
 from coordenada.coordenada import Coordenada
  
-c = Cavalo(ut.EnumCor.BRANCO, Coordenada(7, 5))
+c = Torre(ut.EnumCor.BRANCO, Coordenada(2, 4))
 
 print(len(c.lista_de_posssiveis_movimentos))
 
