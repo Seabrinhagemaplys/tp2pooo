@@ -1,8 +1,8 @@
-from peca.torre import Torre
+from peca.rei import Rei
 import utils.utils as ut
 from coordenada.coordenada import Coordenada
  
-c = Torre(ut.EnumCor.BRANCO, Coordenada(5, 3))
+c = Rei(ut.EnumCor.BRANCO, Coordenada(0, 1))
 
 print(len(c.lista_de_posssiveis_movimentos))
 

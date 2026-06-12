@@ -12,4 +12,10 @@ class Rei(Peca):
         ) 
 
     def atualizar_lista_de_possiveis_coordenadas(self):
-        pass
+        self.lista_de_posssiveis_movimentos = []
+        linha_atual: int = self.coordenada_atual.linha
+        coluna_atual: int = self.coordenada_atual.coluna
+
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                self.tentar_adicionar(linha_atual + i, coluna_atual + j)
