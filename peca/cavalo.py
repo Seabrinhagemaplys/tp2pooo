@@ -12,4 +12,14 @@ class Cavalo(Peca):
         ) 
 
     def atualizar_lista_de_possiveis_coordenadas(self):
-        pass
+        linha_atual: int = self.coordenada_atual.linha
+        coluna_atual: int = self.coordenada_atual.coluna
+
+        self.tentar_adicionar(linha_atual + 1, coluna_atual - 2)
+        self.tentar_adicionar(linha_atual + 2, coluna_atual - 1)
+        self.tentar_adicionar(linha_atual + 2, coluna_atual + 1)
+        self.tentar_adicionar(linha_atual + 1, coluna_atual + 2)
+        self.tentar_adicionar(linha_atual - 1, coluna_atual + 2)
+        self.tentar_adicionar(linha_atual - 2, coluna_atual + 1)
+        self.tentar_adicionar(linha_atual - 2, coluna_atual - 1)
+        self.tentar_adicionar(linha_atual - 1, coluna_atual - 2)
