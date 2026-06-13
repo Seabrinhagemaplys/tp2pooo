@@ -41,11 +41,9 @@ class Jogador:
         return list(self.__lista_pecas)  # retorna cópia defensiva
 
     def adicionar_peca(self, peca):
-        """Adiciona uma peça à lista do jogador."""
         self.__lista_pecas.append(peca)
 
     def remover_peca(self, peca):
-        """Remove uma peça da lista (quando capturada, por exemplo)."""
         if peca in self.__lista_pecas:
             self.__lista_pecas.remove(peca)
         else:
@@ -58,7 +56,6 @@ class Jogador:
         return list(self.__lista_movimentos)  # retorna cópia defensiva
 
     def registrar_movimento(self, movimento: str):
-        """Registra um movimento feito pelo jogador (ex: 'e2e4')."""
         if not isinstance(movimento, str) or not movimento.strip():
             raise ValueError("O movimento deve ser uma string não vazia.")
         self.__lista_movimentos.append(movimento.strip())
