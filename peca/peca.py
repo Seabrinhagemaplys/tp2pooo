@@ -1,15 +1,20 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from tabuleiro.tabuleiro import Tabuleiro
 from abc import ABC, abstractmethod
 import utils.utils as ut
 from coordenada.coordenada import Coordenada
 
 class Peca(ABC):
-    def __init__(self, caractere: ut.EnumCaracteres, cor: ut.EnumCor, coordenada: Coordenada):
+    def __init__(self, caractere: ut.EnumCaracteres, cor: ut.EnumCor, coordenada: Coordenada, tabuleiro: Tabuleiro):
         self._caractere = caractere
         self._cor = cor
         self._coordenada_atual = coordenada
+        self.tabuleiro = tabuleiro
 
         self.lista_de_posssiveis_movimentos: list[Coordenada] = []
-        self.atualizar_lista_de_possiveis_coordenadas()
 
     # PROPRIEDADES
 
@@ -50,7 +55,14 @@ class Peca(ABC):
         Adiciona coordenada à lista somente se for válida no tabuleiro.
         """
         try:
-            self.lista_de_posssiveis_movimentos.append(Coordenada(linha, coluna))
+            coordenada = Coordenada(linha, coluna)
+
+            if all([
+                (coordenada not in self.lista_de_posssiveis_movimentos),
+                (coordenada != self.coordenada_atual),
+                (self.tabuleiro.get_peca_na_posicao(coordenada) is None)
+            ]):
+                self.lista_de_posssiveis_movimentos.append(coordenada)
         except Exception as e:
             pass
 
