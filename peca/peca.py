@@ -1,11 +1,22 @@
-from abc import ABC
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from tabuleiro.tabuleiro import Tabuleiro
+from abc import ABC, abstractmethod
 import utils.utils as ut
+from coordenada.coordenada import Coordenada
 
 class Peca(ABC):
-    def __init__(self, caractere: ut.EnumCaracteres, cor: ut.EnumCor):
+    def __init__(self, caractere: ut.EnumCaracteres, cor: ut.EnumCor, coordenada: Coordenada, tabuleiro: Tabuleiro):
         self._caractere = caractere
         self._cor = cor
+        self._coordenada_atual = coordenada
+        self.tabuleiro = tabuleiro
 
+        self.lista_de_posssiveis_movimentos: list[Coordenada] = []
+
+    # PROPRIEDADES
 
     @property
     def caractere(self):
@@ -25,3 +36,36 @@ class Peca(ABC):
             raise TypeError("Tipo invalido para cor!")
 
         self._cor = nova_cor 
+
+    @property
+    def coordenada_atual(self):
+        return self._coordenada_atual
+    
+    @coordenada_atual.setter
+    def coordenada_atual(self, nova_coordenada: Coordenada):
+        if not isinstance (nova_coordenada, Coordenada):
+            raise TypeError("Nao é uma coordenada!")
+        
+        self._coordenada_atual = nova_coordenada
+        
+    #METODOS
+
+    def tentar_adicionar(self, linha: int, coluna: int):
+        """
+        Adiciona coordenada à lista somente se for válida no tabuleiro.
+        """
+        try:
+            coordenada = Coordenada(linha, coluna)
+
+            if all([
+                (coordenada not in self.lista_de_posssiveis_movimentos),
+                (coordenada != self.coordenada_atual),
+                (self.tabuleiro.get_peca_na_posicao(coordenada) is None)
+            ]):
+                self.lista_de_posssiveis_movimentos.append(coordenada)
+        except Exception as e:
+            pass
+
+    @abstractmethod
+    def atualizar_lista_de_possiveis_coordenadas(self):
+        pass

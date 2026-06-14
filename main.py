@@ -1,13 +1,8 @@
-from tabuleiro.tabuleiro import Tabueiro
+from peca.bispo import Bispo
+from tabuleiro.tabuleiro import Tabuleiro
 import utils.utils as ut
 from coordenada.coordenada import Coordenada
 
-tb = Tabueiro()
-print(tb.gerar_string_tabuleiro(ut.EnumCor.BRANCO))
+t = Tabuleiro()
 
-tb.mover_peca(Coordenada(1,1), Coordenada(2,1))
-
-print(tb.gerar_string_tabuleiro(ut.EnumCor.BRANCO))
-print(tb.gerar_string_tabuleiro(ut.EnumCor.PRETO))
-
-
+print(t.gerar_string_tabuleiro(ut.EnumCor.BRANCO))
