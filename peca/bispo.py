@@ -40,11 +40,18 @@ class Bispo(Peca):
             """
             if not dentro_do_tabuleiro(linha, coluna):
                 return
-            if (self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna)) is not None) and (self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna)) is not self):
-                return
 
-            adicionar_posicao_mais_mais(linha + 1, coluna + 1)
+            peca_na_posicao = self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna))
+
+            if peca_na_posicao is not None:
+                if peca_na_posicao.cor == self.cor:
+                    return
+                else:
+                    self.tentar_adicionar(linha, coluna)
+                    return
+
             self.tentar_adicionar(linha, coluna)
+            adicionar_posicao_mais_mais(linha + 1, coluna + 1)
 
         def adicionar_posicao_mais_menos(linha: int, coluna: int):
             """
@@ -52,11 +59,18 @@ class Bispo(Peca):
             """
             if not dentro_do_tabuleiro(linha, coluna):
                 return
-            if (self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna)) is not None) and (self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna)) is not self):
-                return
 
-            adicionar_posicao_mais_menos(linha + 1, coluna - 1)
+            peca_na_posicao = self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna))
+
+            if peca_na_posicao is not None:
+                if peca_na_posicao.cor == self.cor:
+                    return
+                else:
+                    self.tentar_adicionar(linha, coluna)
+                    return
+
             self.tentar_adicionar(linha, coluna)
+            adicionar_posicao_mais_menos(linha + 1, coluna - 1)
 
         def adicionar_posicao_menos_mais(linha: int, coluna: int):
             """
@@ -64,11 +78,18 @@ class Bispo(Peca):
             """
             if not dentro_do_tabuleiro(linha, coluna):
                 return
-            if (self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna)) is not None) and (self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna)) is not self):
-                return
 
-            adicionar_posicao_menos_mais(linha - 1, coluna + 1)
+            peca_na_posicao = self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna))
+
+            if peca_na_posicao is not None:
+                if peca_na_posicao.cor == self.cor:
+                    return
+                else:
+                    self.tentar_adicionar(linha, coluna)
+                    return
+
             self.tentar_adicionar(linha, coluna)
+            adicionar_posicao_menos_mais(linha - 1, coluna + 1)
 
         def adicionar_posicao_menos_menos(linha: int, coluna: int):
             """
@@ -76,14 +97,21 @@ class Bispo(Peca):
             """
             if not dentro_do_tabuleiro(linha, coluna):
                 return
-            if (self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna)) is not None) and (self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna)) is not self):
-                return
 
-            adicionar_posicao_menos_menos(linha - 1, coluna - 1)
+            peca_na_posicao = self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna))
+
+            if peca_na_posicao is not None:
+                if peca_na_posicao.cor == self.cor:
+                    return
+                else:
+                    self.tentar_adicionar(linha, coluna)
+                    return
+
             self.tentar_adicionar(linha, coluna)
+            adicionar_posicao_menos_menos(linha - 1, coluna - 1)
 
-        adicionar_posicao_mais_mais(linha_atual, coluna_atual)
-        adicionar_posicao_mais_menos(linha_atual, coluna_atual)
-        adicionar_posicao_menos_mais(linha_atual, coluna_atual)
-        adicionar_posicao_menos_menos(linha_atual, coluna_atual)
+        adicionar_posicao_mais_mais(linha_atual + 1, coluna_atual + 1)
+        adicionar_posicao_mais_menos(linha_atual + 1, coluna_atual - 1)
+        adicionar_posicao_menos_mais(linha_atual - 1, coluna_atual + 1)
+        adicionar_posicao_menos_menos(linha_atual - 1, coluna_atual - 1)
             

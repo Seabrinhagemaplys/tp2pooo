@@ -56,12 +56,13 @@ class Peca(ABC):
         """
         try:
             coordenada = Coordenada(linha, coluna)
+            peca_na_casa = self.tabuleiro.get_peca_na_posicao(coordenada)
 
-            if all([
-                (coordenada not in self.lista_de_posssiveis_movimentos),
-                (coordenada != self.coordenada_atual),
-                (self.tabuleiro.get_peca_na_posicao(coordenada) is None)
-            ]):
+            if (
+                coordenada not in self.lista_de_posssiveis_movimentos
+                and coordenada != self.coordenada_atual
+                and (peca_na_casa is None or peca_na_casa.cor != self.cor)
+            ):
                 self.lista_de_posssiveis_movimentos.append(coordenada)
         except Exception as e:
             pass
