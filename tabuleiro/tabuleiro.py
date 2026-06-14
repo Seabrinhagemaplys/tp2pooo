@@ -103,6 +103,9 @@ class Tabuleiro:
 
         self.atualizar_todas_as_listas()
 
+        if isinstance(peca_movida, Peao):
+            peca_movida.ja_movimentou = True
+
         return peca_tomada
     
     def atualizar_todas_as_listas(self):
