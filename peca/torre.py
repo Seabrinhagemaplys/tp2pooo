@@ -36,8 +36,14 @@ class Torre(Peca):
         def procurar_linha_esquerda(linha: int, coluna: int):
             if not dentro_do_tabuleiro(linha, coluna):
                 return
-            if (self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna)) is not None) and (self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna)) is not self):
-                return
+            
+            peca_na_posicao = self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna))
+            if (peca_na_posicao is not None):
+                if peca_na_posicao.cor == self.cor:
+                    return
+                else:
+                    self.tentar_adicionar(linha, coluna)
+                    return
 
             self.tentar_adicionar(linha, coluna)
             procurar_linha_esquerda(linha, coluna - 1)
@@ -45,8 +51,14 @@ class Torre(Peca):
         def procurar_linha_direita(linha: int, coluna: int):
             if not dentro_do_tabuleiro(linha, coluna):
                 return
-            if (self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna)) is not None) and (self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna)) is not self):
-                return
+            
+            peca_na_posicao = self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna))
+            if (peca_na_posicao is not None):
+                if peca_na_posicao.cor == self.cor:
+                    return
+                else:
+                    self.tentar_adicionar(linha, coluna)
+                    return
 
             self.tentar_adicionar(linha, coluna)
             procurar_linha_direita(linha, coluna + 1)
@@ -54,22 +66,34 @@ class Torre(Peca):
         def procurar_coluna_acima(linha: int, coluna: int):
             if not dentro_do_tabuleiro(linha, coluna):
                 return
-            if (self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna)) is not None) and (self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna)) is not self):
-                return
+            
+            peca_na_posicao = self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna))
+            if (peca_na_posicao is not None):
+                if peca_na_posicao.cor == self.cor:
+                    return
+                else:
+                    self.tentar_adicionar(linha, coluna)
+                    return
 
             self.tentar_adicionar(linha, coluna)
-            procurar_coluna_acima(linha - 1, coluna)
+            procurar_coluna_acima(linha -1, coluna)
         
         def procurar_coluna_abaixo(linha: int, coluna: int):
             if not dentro_do_tabuleiro(linha, coluna):
                 return
-            if (self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna)) is not None) and (self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna)) is not self):
-                return
+            
+            peca_na_posicao = self.tabuleiro.get_peca_na_posicao(Coordenada(linha, coluna))
+            if (peca_na_posicao is not None):
+                if peca_na_posicao.cor == self.cor:
+                    return
+                else:
+                    self.tentar_adicionar(linha, coluna)
+                    return
 
             self.tentar_adicionar(linha, coluna)
             procurar_coluna_abaixo(linha + 1, coluna)
 
-        procurar_linha_esquerda(linha_atual, coluna_atual)
-        procurar_linha_direita(linha_atual, coluna_atual)
-        procurar_coluna_acima(linha_atual, coluna_atual)
-        procurar_coluna_abaixo(linha_atual, coluna_atual)
+        procurar_linha_esquerda(linha_atual, coluna_atual - 1)
+        procurar_linha_direita(linha_atual, coluna_atual + 1)
+        procurar_coluna_acima(linha_atual - 1, coluna_atual)
+        procurar_coluna_abaixo(linha_atual + 1, coluna_atual)

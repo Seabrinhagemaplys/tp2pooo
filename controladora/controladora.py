@@ -1,4 +1,4 @@
-from tabuleiro.tabuleiro import Tabueiro
+from tabuleiro.tabuleiro import Tabuleiro
 from coordenada.coordenada import Coordenada
 from peca.peca import Peca
 from peca.peao import Peao
@@ -8,7 +8,7 @@ class Controladora:
     def __init__(self):
         self.jogo_em_andamento = True
         self.lado = ut.EnumCor.BRANCO
-        self.tabuleiro = Tabueiro()
+        self.tabuleiro = Tabuleiro()
 
     def mostrar_tabuleiro(self):
         """
@@ -67,11 +67,11 @@ class Controladora:
         """
         Função que checa se uma jogada é válida ou não
         """
-        if not self.tabuleiro.posicao_esta_ocupada(coordenada_origem):
-            print("Não há peça nesta posição")
-            return False
         
-        peca_a_ser_movida: Peca = self.tabuleiro.get_peca_na_posicao(coordenada_origem)
+        peca_a_ser_movida: Peca | None = self.tabuleiro.get_peca_na_posicao(coordenada_origem)
+        if peca_a_ser_movida is None:
+            print("Não há peça nesse lugar")
+            return False
         
         if not (peca_a_ser_movida.cor == self.lado):
             print(f"A cor da peça é {peca_a_ser_movida.cor} mas é a vez de {self.lado}")
