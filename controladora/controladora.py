@@ -10,8 +10,9 @@ class Controladora:
         self.jogo_em_andamento = True
         self.lado = ut.EnumCor.BRANCO
         self.tabuleiro = Tabuleiro()
-        self.cheque : bool = False
+        self.cheque: bool = False
         self.peca_dando_cheque: None | Peca = None
+        self.ganhador: ut.EnumCor | None = None
 
     def mostrar_tabuleiro(self):
         """
@@ -122,23 +123,37 @@ class Controladora:
         Inicia o loop de jogo
         """
         while self.jogo_em_andamento:
+            # descobrir o lado adversário
+            lado_adversario = ut.EnumCor.PRETO if self.lado == ut.EnumCor.BRANCO else ut.EnumCor.BRANCO
+
+            # Mostrar o tabuleiro ao jogador
             self.mostrar_tabuleiro()
             print(f"Cheque: {self.cheque}")
+
+            # Montar a jogada que será realizada e executá-la
             coordenada_origem, coordenada_destino = self.montar_jogada()
             self.tabuleiro.mover_peca(coordenada_origem, coordenada_destino)
 
+            # Averiguar cheque
             self.cheque, self.peca_dando_cheque = self.checar_cheque()
 
             if self.cheque:
-                lado_em_cheque = (ut.EnumCor.PRETO) if self.lado == ut.EnumCor.BRANCO else (ut.EnumCor.BRANCO)
-
-                if self.checar_cheque_mate(lado_em_cheque):
+                if self.sem_movimentos_legais(lado_adversario):
+                    # Cheque mate, é cheque e não há movimentos legais
+                    self.ganhador = self.lado
                     self.jogo_em_andamento = False
+            elif self.sem_movimentos_legais(lado_adversario):
+                # Afogamento, não é cheque e não há movimentos legais
+                self.jogo_em_andamento = False
 
             self.alterar_lado()
 
+        # Jogo acabou
         self.mostrar_tabuleiro()
-        print(f"CHEQUE MATE, GANHADOR: {self.lado.value}")
+        if self.ganhador:
+            print(f"CHEQUE MATE, GANHADOR: {self.ganhador.value}")
+        else:
+            print("Afogou")
 
     def checar_cheque(self) -> tuple [bool, Peca| None]:
         """
@@ -180,20 +195,16 @@ class Controladora:
 
         return False
     
-    def checar_cheque_mate(self, lado) -> bool:
-        """
-        Checa se um cheque mate ocorreu para um lado
-        """
+    def sem_movimentos_legais(self, lado: ut.EnumCor) -> bool:
         for peca in self.tabuleiro.get_pecas_de_uma_cor(lado):
             origem = peca.coordenada_atual
 
             for destino in peca.lista_de_posssiveis_movimentos:
                 peca_tomada = self.tabuleiro.mover_peca(origem, destino, simulacao=True)
-
                 continua_em_cheque = self.rei_em_cheque(lado)
                 self.tabuleiro.voltar_movimento(origem, destino, peca_tomada)
 
                 if not continua_em_cheque:
                     return False
-
+                
         return True
