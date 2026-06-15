@@ -82,7 +82,7 @@ class Controladora:
                 if coordenada_destino not in self.peca_dando_cheque.lista_de_posssiveis_movimentos:
                     print("Deve bloquear o cheque!")
                     return False
-            else:
+                
                 if coordenada_destino in self.peca_dando_cheque.lista_de_posssiveis_movimentos:
                     print("Você deve SAIR do cheque")
                     return False
@@ -137,34 +137,23 @@ class Controladora:
             self.mostrar_tabuleiro()
             coordenada_origem, coordenada_destino = self.montar_jogada()
             self.tabuleiro.mover_peca(coordenada_origem, coordenada_destino)
-            
-            self.checar_cheque()
+
+            cor_oposta = ut.EnumCor.PRETO if self.lado == ut.EnumCor.BRANCO else ut.EnumCor.BRANCO
+            self.cheque, self.peca_dando_cheque = self.checar_cheque(cor_oposta)
+
             self.alterar_lado()
 
-    def checar_cheque(self, coordendas_peca_movida: Coordenada):
-        peca_movida = self.tabuleiro.get_peca_na_posicao(coordendas_peca_movida)
-        cor_oposta = ut.EnumCor.BRANCO if peca_movida.cor == ut.EnumCor.PRETO else ut.EnumCor.PRETO
-        
-        rei_oposto: None | Rei = None 
-        
-        match cor_oposta:
-            case ut.EnumCor.BRANCO:
-                rei_oposto = self.tabuleiro.get_rei_branco()
-            
-            case ut.EnumCor.PRETO:
-                rei_oposto = self.tabuleiro.get_rei_preto()
+    def checar_cheque(self, cor_rei: ut.EnumCor) -> tuple [bool, Peca| None]:
+        rei = self.tabuleiro.get_rei_branco() if cor_rei == ut.EnumCor.BRANCO else self.tabuleiro.get_rei_preto()
 
-            case _:
-                pass
-            
-        if rei_oposto is None:
-            raise ValueError("Tem algo de muito errado")
-        
-        if rei_oposto.coordenada_atual in peca_movida.lista_de_posssiveis_movimentos:
-            self.cheque = True
-            self.peca_dando_cheque = peca_movida
-        else:
-            self.cheque = False
-            self.peca_dando_cheque = None
+        for i in range(8):
+            for j in range(8):
+                peca = self.tabuleiro.get_peca_na_posicao(Coordenada(i, j))
+
+                if peca is not None and peca.cor != cor_rei:
+                    if rei.coordenada_atual in peca.lista_de_posssiveis_movimentos:
+                        return True, peca
+                    
+        return False, None
 
             
