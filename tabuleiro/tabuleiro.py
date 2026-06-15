@@ -68,7 +68,13 @@ class Tabuleiro:
         passo: int = 1 if lado == ut.EnumCor.BRANCO else -1
 
         for i in range(inicio, fim, passo):
+            if i == inicio:
+                string_tabuleiro += formatar_casa(" ")
+                string_tabuleiro += "".join([formatar_casa(char) for char in range(inicio + 1, fim + 1, passo)])
+                string_tabuleiro += '\n'
             for j in range(inicio, fim, passo):
+                if j == inicio:
+                    string_tabuleiro += formatar_casa(i + 1)
                 if (self.matriz_pecas[i][j] is not None):
                     string_tabuleiro += formatar_casa(self.matriz_pecas[i][j].caractere.value)
                 else:
@@ -83,17 +89,56 @@ class Tabuleiro:
         """
         return self.matriz_pecas[coordenada.linha][coordenada.coluna] 
     
-    def mover_peca(self, coordenada_origem: Coordenada, coordenada_destino: Coordenada) -> Peca | None:
-        """
-        Move uma peça no tabuleiro e retorna a peça comida, caso haja e None caso contrário
-        """
+    def mover_peca(self, coordenada_origem: Coordenada, coordenada_destino: Coordenada, simulacao: bool = False) -> Peca | None:
         if self.matriz_pecas[coordenada_origem.linha][coordenada_origem.coluna] is None:
             raise ValueError("Não se pode mexer nada")
 
         peca_movida = self.matriz_pecas[coordenada_origem.linha][coordenada_origem.coluna]
-        peca_tomada = None if self.matriz_pecas[coordenada_destino.linha][coordenada_destino.coluna] is None else self.matriz_pecas[coordenada_destino.linha][coordenada_destino.coluna]
+        peca_tomada = self.matriz_pecas[coordenada_destino.linha][coordenada_destino.coluna]
 
         self.matriz_pecas[coordenada_origem.linha][coordenada_origem.coluna] = None
         self.matriz_pecas[coordenada_destino.linha][coordenada_destino.coluna] = peca_movida
 
+        peca_movida.coordenada_atual = coordenada_destino
+
+        self.atualizar_todas_as_listas()
+
+        if isinstance(peca_movida, Peao) and not simulacao:
+            peca_movida.ja_movimentou = True
+
         return peca_tomada
+    
+    def voltar_movimento(self, coordenada_origem: Coordenada, coordenada_destino: Coordenada, peca_tomada: Peca | None):
+        peca_movimentada = self.get_peca_na_posicao(coordenada_destino)
+
+        self.matriz_pecas[coordenada_destino.linha][coordenada_destino.coluna] = peca_tomada
+        self.matriz_pecas[coordenada_origem.linha][coordenada_origem.coluna] = peca_movimentada
+
+        if peca_movimentada is not None:
+            peca_movimentada.coordenada_atual = coordenada_origem
+
+        self.atualizar_todas_as_listas()
+
+    def atualizar_todas_as_listas(self):
+        for i in range(8):
+            for j in range(8):
+                peca = self.matriz_pecas[i][j]
+                if peca is not None:
+                    peca.lista_de_posssiveis_movimentos.clear()
+                    peca.atualizar_lista_de_possiveis_coordenadas()
+
+    def get_rei_preto(self):
+        for i in range(8):
+            for j in range(8):
+                peca = self.get_peca_na_posicao(Coordenada(i,j))
+                if isinstance(peca, Rei) and peca.cor == ut.EnumCor.PRETO:
+                    return peca
+                
+    def get_rei_branco(self):
+        for i in range(8):
+            for j in range(8):
+                peca = self.get_peca_na_posicao(Coordenada(i,j))
+                if isinstance(peca, Rei) and peca.cor == ut.EnumCor.BRANCO:
+                    return peca
+                
+    
