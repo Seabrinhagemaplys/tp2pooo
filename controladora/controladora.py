@@ -196,6 +196,9 @@ class Controladora:
         return False
     
     def sem_movimentos_legais(self, lado: ut.EnumCor) -> bool:
+        """
+        verifica se existem movimentos legais para as peças de um lado
+        """
         for peca in self.tabuleiro.get_pecas_de_uma_cor(lado):
             origem = peca.coordenada_atual
 
