@@ -141,4 +141,19 @@ class Tabuleiro:
                 if isinstance(peca, Rei) and peca.cor == ut.EnumCor.BRANCO:
                     return peca
                 
-    
+    def get_pecas_de_uma_cor(self, cor: ut.EnumCor):
+        lista_de_pecas: list[Peca] = []
+        
+        for i in range(8):
+            for j in range(8):
+                possivel_peca: Peca | None = self.get_peca_na_posicao(Coordenada(i, j))
+
+                if possivel_peca is None:
+                    continue
+
+                if possivel_peca.cor != cor:
+                    continue
+
+                lista_de_pecas.append(possivel_peca)
+
+        return lista_de_pecas

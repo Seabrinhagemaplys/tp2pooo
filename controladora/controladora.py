@@ -32,11 +32,6 @@ class Controladora:
                 return False
             if len(lista_entrada) != 2:
                 return False
-            # for parte_da_entrada in lista_entrada:
-            #     if not parte_da_entrada.isnumeric():
-            #         return False
-            #     if not int(parte_da_entrada) in range(1, 9):
-            #         return False
                 
             return True
             
@@ -60,11 +55,6 @@ class Controladora:
 
             case _:
                 pass
-
-
-    #
-    # VALIDAR DEPENDE DE MUITA COISA PRECISAMOS INCREMENTAR
-    #
 
     def validar_jogada(self, coordenada_origem: Coordenada, coordenada_destino: Coordenada):
         """
@@ -94,9 +84,7 @@ class Controladora:
             return False
         
         peca_tomada = self.tabuleiro.mover_peca(coordenada_origem, coordenada_destino, simulacao=True)
-
         meu_rei_em_cheque = self.rei_em_cheque(self.lado)
-
         self.tabuleiro.voltar_movimento(coordenada_origem, coordenada_destino, peca_tomada)
 
         if meu_rei_em_cheque:
@@ -110,8 +98,10 @@ class Controladora:
         return True
 
     def montar_jogada(self):
+        """
+        Monta uma jogada válida para jogo
+        """
         repetir = True
-        
 
         while repetir:
             try:
@@ -127,7 +117,6 @@ class Controladora:
 
         return coordenada_origem, coordenada_destino
 
-
     def iniciar(self):
         """
         Inicia o loop de jogo
@@ -140,9 +129,21 @@ class Controladora:
 
             self.cheque, self.peca_dando_cheque = self.checar_cheque()
 
+            if self.cheque:
+                lado_em_cheque = (ut.EnumCor.PRETO) if self.lado == ut.EnumCor.BRANCO else (ut.EnumCor.BRANCO)
+
+                if self.checar_cheque_mate(lado_em_cheque):
+                    self.jogo_em_andamento = False
+
             self.alterar_lado()
 
+        self.mostrar_tabuleiro()
+        print(f"CHEQUE MATE, GANHADOR: {self.lado.value}")
+
     def checar_cheque(self) -> tuple [bool, Peca| None]:
+        """
+        Checa se algum dos lados está em cheque, retornando a peça que está deixando o rei em cheque além da informação se o cheque ocorre
+        """
         coordenadas_rei_branco: Coordenada = self.tabuleiro.get_rei_branco().coordenada_atual
         coordenadas_rei_preto: Coordenada = self.tabuleiro.get_rei_preto().coordenada_atual
 
@@ -158,7 +159,10 @@ class Controladora:
                     
         return False, None
 
-    def rei_em_cheque(self, lado: ut.EnumCor):
+    def rei_em_cheque(self, lado: ut.EnumCor) -> bool:
+        """
+        Verifica se o rei de um lado está em chque
+        """
         coordenadas_rei = ((self.tabuleiro.get_rei_branco().coordenada_atual) if lado == ut.EnumCor.BRANCO else (self.tabuleiro.get_rei_preto().coordenada_atual))
 
         for i in range(8):
@@ -175,3 +179,21 @@ class Controladora:
                     return True
 
         return False
+    
+    def checar_cheque_mate(self, lado) -> bool:
+        """
+        Checa se um cheque mate ocorreu para um lado
+        """
+        for peca in self.tabuleiro.get_pecas_de_uma_cor(lado):
+            origem = peca.coordenada_atual
+
+            for destino in peca.lista_de_posssiveis_movimentos:
+                peca_tomada = self.tabuleiro.mover_peca(origem, destino, simulacao=True)
+
+                continua_em_cheque = self.rei_em_cheque(lado)
+                self.tabuleiro.voltar_movimento(origem, destino, peca_tomada)
+
+                if not continua_em_cheque:
+                    return False
+
+        return True
