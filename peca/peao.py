@@ -58,21 +58,6 @@ class Peao(Peca):
         if not self.ja_movimentou:
             self.tentar_adicionar(linha_atual + 2, coluna_atual)
 
-    def atualizar_lista_de_coordenadas_para_tomada(self):
-        self.movimentos_para_tomadas = []
-        linha_atual: int = self.coordenada_atual.linha
-        coluna_atual: int = self.coordenada_atual.coluna
-
-        match self.cor:
-            case ut.EnumCor.BRANCO:
-                self.atualizar_lista_de_coordenadas_para_tomada_branca(linha_atual, coluna_atual)
-            
-            case ut.EnumCor.PRETO:
-                self.atualizar_lista_de_coordenadas_para_tomada_preto(linha_atual, coluna_atual)
-            
-            case _:
-                pass
-
     def tentar_adicionar_tomada(self, linha, coluna):
         """
         Adiciona coordenada à lista somente se for válida no tabuleiro, específico para tomadas do peão
@@ -89,6 +74,21 @@ class Peao(Peca):
                 self.movimentos_para_tomadas.append(coordenada)
         except Exception as e:
             pass
+
+    def atualizar_lista_de_coordenadas_para_tomada(self):
+        self.movimentos_para_tomadas = []
+        linha_atual: int = self.coordenada_atual.linha
+        coluna_atual: int = self.coordenada_atual.coluna
+
+        match self.cor:
+            case ut.EnumCor.BRANCO:
+                self.atualizar_lista_de_coordenadas_para_tomada_branca(linha_atual, coluna_atual)
+            
+            case ut.EnumCor.PRETO:
+                self.atualizar_lista_de_coordenadas_para_tomada_preto(linha_atual, coluna_atual)
+            
+            case _:
+                pass
 
     def atualizar_lista_de_coordenadas_para_tomada_branca(self, linha_atual: int, coluna_atual: int):
         self.tentar_adicionar_tomada(linha_atual - 1, coluna_atual - 1)
