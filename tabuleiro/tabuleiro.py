@@ -103,8 +103,11 @@ class Tabuleiro:
 
         self.atualizar_todas_as_listas()
 
-        if isinstance(peca_movida, Peao) and not simulacao:
-            peca_movida.ja_movimentou = True
+        if isinstance(peca_movida, Peao):
+            peca_movida.atualizar_lista_de_coordenadas_para_tomada()
+            
+            if not simulacao:
+                peca_movida.ja_movimentou = True
 
         return peca_tomada
     
