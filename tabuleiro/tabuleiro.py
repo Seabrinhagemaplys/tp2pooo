@@ -115,3 +115,19 @@ class Tabuleiro:
                 if peca is not None:
                     peca.lista_de_posssiveis_movimentos.clear()
                     peca.atualizar_lista_de_possiveis_coordenadas()
+
+    def get_rei_preto(self):
+        for i in range(8):
+            for j in range(8):
+                peca = self.get_peca_na_posicao(Coordenada(i,j))
+                if isinstance(peca, Rei) and peca.cor == ut.EnumCor.PRETO:
+                    return peca
+                
+    def get_rei_branco(self):
+        for i in range(8):
+            for j in range(8):
+                peca = self.get_peca_na_posicao(Coordenada(i,j))
+                if isinstance(peca, Rei) and peca.cor == ut.EnumCor.BRANCO:
+                    return peca
+                
+    

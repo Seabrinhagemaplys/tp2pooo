@@ -3,12 +3,15 @@ from coordenada.coordenada import Coordenada
 from peca.peca import Peca
 from peca.peao import Peao
 import utils.utils as ut
+from peca.rei import Rei
 
 class Controladora:
     def __init__(self):
         self.jogo_em_andamento = True
         self.lado = ut.EnumCor.BRANCO
         self.tabuleiro = Tabuleiro()
+        self.cheque : bool = False
+        self.peca_dando_cheque: None | Peca = None
 
     def mostrar_tabuleiro(self):
         """
@@ -67,10 +70,26 @@ class Controladora:
         """
         Função que checa se uma jogada é válida ou não
         """
+        peca_no_destino = self.tabuleiro.get_peca_na_posicao(coordenada_destino)
         
         peca_a_ser_movida: Peca | None = self.tabuleiro.get_peca_na_posicao(coordenada_origem)
         if peca_a_ser_movida is None:
             print("Não há peça nesse lugar")
+            return False            
+        
+        if self.cheque:
+            if not isinstance(peca_a_ser_movida, Rei):
+                if coordenada_destino not in self.peca_dando_cheque.lista_de_posssiveis_movimentos:
+                    print("Deve bloquear o cheque!")
+                    return False
+            else:
+                if coordenada_destino in self.peca_dando_cheque.lista_de_posssiveis_movimentos:
+                    print("Você deve SAIR do cheque")
+                    return False
+
+        
+        if peca_no_destino is not None and isinstance(peca_no_destino, Rei):
+            print("Impossível tomar! É um rei!")
             return False
         
         if not (peca_a_ser_movida.cor == self.lado):
@@ -93,17 +112,19 @@ class Controladora:
 
     def montar_jogada(self):
         repetir = True
+        
 
         while repetir:
-            linha_inicial, coluna_inicial = self.coletar_entradas("Insira as coordenadas da peça que quer mover (formato: '[linha] [coluna]', onde linha e coluna são números, de 1 a 8): ")
-            linha_final, coluna_final = self.coletar_entradas("Insira as coordenadas de onde você quer mover a peça (formato: '[linha] [coluna]', onde linha e coluna são números, de 1 a 8): ")
             try:
+                linha_inicial, coluna_inicial = self.coletar_entradas("Insira as coordenadas da peça que quer mover (formato: '[linha] [coluna]', onde linha e coluna são números, de 1 a 8): ")
+                linha_final, coluna_final = self.coletar_entradas("Insira as coordenadas de onde você quer mover a peça (formato: '[linha] [coluna]', onde linha e coluna são números, de 1 a 8): ")
                 coordenada_origem: Coordenada = Coordenada(linha_inicial, coluna_inicial)
                 coordenada_destino: Coordenada = Coordenada(linha_final, coluna_final)
                 if (self.validar_jogada(coordenada_origem, coordenada_destino)):
                     repetir = False
             except Exception as e:
                 pass
+                
 
         return coordenada_origem, coordenada_destino
 
@@ -116,6 +137,34 @@ class Controladora:
             self.mostrar_tabuleiro()
             coordenada_origem, coordenada_destino = self.montar_jogada()
             self.tabuleiro.mover_peca(coordenada_origem, coordenada_destino)
-
+            
+            self.checar_cheque()
             self.alterar_lado()
+
+    def checar_cheque(self, coordendas_peca_movida: Coordenada):
+        peca_movida = self.tabuleiro.get_peca_na_posicao(coordendas_peca_movida)
+        cor_oposta = ut.EnumCor.BRANCO if peca_movida.cor == ut.EnumCor.PRETO else ut.EnumCor.PRETO
+        
+        rei_oposto: None | Rei = None 
+        
+        match cor_oposta:
+            case ut.EnumCor.BRANCO:
+                rei_oposto = self.tabuleiro.get_rei_branco()
+            
+            case ut.EnumCor.PRETO:
+                rei_oposto = self.tabuleiro.get_rei_preto()
+
+            case _:
+                pass
+            
+        if rei_oposto is None:
+            raise ValueError("Tem algo de muito errado")
+        
+        if rei_oposto.coordenada_atual in peca_movida.lista_de_posssiveis_movimentos:
+            self.cheque = True
+            self.peca_dando_cheque = peca_movida
+        else:
+            self.cheque = False
+            self.peca_dando_cheque = None
+
             
