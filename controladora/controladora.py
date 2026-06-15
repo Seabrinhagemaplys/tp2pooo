@@ -133,6 +133,10 @@ class Controladora:
             # Montar a jogada que será realizada e executá-la
             coordenada_origem, coordenada_destino = self.montar_jogada()
             self.tabuleiro.mover_peca(coordenada_origem, coordenada_destino)
+            
+            tp = self.tabuleiro.get_peca_na_posicao(coordenada_destino)
+            if isinstance(tp, Peao):
+                print(tp.movimentos_para_tomadas)
 
             # Averiguar cheque
             self.cheque, self.peca_dando_cheque = self.checar_cheque()
