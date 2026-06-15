@@ -77,17 +77,6 @@ class Controladora:
             print("Não há peça nesse lugar")
             return False            
         
-        if self.cheque:
-            if not isinstance(peca_a_ser_movida, Rei):
-                if coordenada_destino not in self.peca_dando_cheque.lista_de_posssiveis_movimentos:
-                    print("Deve bloquear o cheque!")
-                    return False
-                
-                if coordenada_destino in self.peca_dando_cheque.lista_de_posssiveis_movimentos:
-                    print("Você deve SAIR do cheque")
-                    return False
-
-        
         if peca_no_destino is not None and isinstance(peca_no_destino, Rei):
             print("Impossível tomar! É um rei!")
             return False
@@ -102,6 +91,16 @@ class Controladora:
         
         if (coordenada_origem == coordenada_destino):
             print("Não se pode mover uma peça para o mesmo lugar")
+            return False
+        
+        peca_tomada = self.tabuleiro.mover_peca(coordenada_origem, coordenada_destino, simulacao=True)
+
+        meu_rei_em_cheque = self.rei_em_cheque(self.lado)
+
+        self.tabuleiro.voltar_movimento(coordenada_origem, coordenada_destino, peca_tomada)
+
+        if meu_rei_em_cheque:
+            print("Essa jogada deixa seu rei em cheque")
             return False
         
         # checagens exclusivas de peão
@@ -135,25 +134,44 @@ class Controladora:
         """
         while self.jogo_em_andamento:
             self.mostrar_tabuleiro()
+            print(f"Cheque: {self.cheque}")
             coordenada_origem, coordenada_destino = self.montar_jogada()
             self.tabuleiro.mover_peca(coordenada_origem, coordenada_destino)
 
-            cor_oposta = ut.EnumCor.PRETO if self.lado == ut.EnumCor.BRANCO else ut.EnumCor.BRANCO
-            self.cheque, self.peca_dando_cheque = self.checar_cheque(cor_oposta)
+            self.cheque, self.peca_dando_cheque = self.checar_cheque()
 
             self.alterar_lado()
 
-    def checar_cheque(self, cor_rei: ut.EnumCor) -> tuple [bool, Peca| None]:
-        rei = self.tabuleiro.get_rei_branco() if cor_rei == ut.EnumCor.BRANCO else self.tabuleiro.get_rei_preto()
+    def checar_cheque(self) -> tuple [bool, Peca| None]:
+        coordenadas_rei_branco: Coordenada = self.tabuleiro.get_rei_branco().coordenada_atual
+        coordenadas_rei_preto: Coordenada = self.tabuleiro.get_rei_preto().coordenada_atual
 
         for i in range(8):
             for j in range(8):
                 peca = self.tabuleiro.get_peca_na_posicao(Coordenada(i, j))
 
-                if peca is not None and peca.cor != cor_rei:
-                    if rei.coordenada_atual in peca.lista_de_posssiveis_movimentos:
-                        return True, peca
+                if peca is None:
+                    continue
+
+                if ((coordenadas_rei_branco in peca.lista_de_posssiveis_movimentos) and (peca.cor == ut.EnumCor.PRETO)) or ((coordenadas_rei_preto in peca.lista_de_posssiveis_movimentos) and (peca.cor == ut.EnumCor.BRANCO)):
+                    return True, peca
                     
         return False, None
 
-            
+    def rei_em_cheque(self, lado: ut.EnumCor):
+        coordenadas_rei = ((self.tabuleiro.get_rei_branco().coordenada_atual) if lado == ut.EnumCor.BRANCO else (self.tabuleiro.get_rei_preto().coordenada_atual))
+
+        for i in range(8):
+            for j in range(8):
+                peca = self.tabuleiro.get_peca_na_posicao(Coordenada(i, j))
+
+                if peca is None:
+                    continue
+
+                if peca.cor == lado:
+                    continue
+
+                if coordenadas_rei in peca.lista_de_posssiveis_movimentos:
+                    return True
+
+        return False

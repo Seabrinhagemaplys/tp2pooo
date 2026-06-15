@@ -89,7 +89,7 @@ class Tabuleiro:
         """
         return self.matriz_pecas[coordenada.linha][coordenada.coluna] 
     
-    def mover_peca(self, coordenada_origem: Coordenada, coordenada_destino: Coordenada) -> Peca | None:
+    def mover_peca(self, coordenada_origem: Coordenada, coordenada_destino: Coordenada, simulacao: bool = False) -> Peca | None:
         if self.matriz_pecas[coordenada_origem.linha][coordenada_origem.coluna] is None:
             raise ValueError("Não se pode mexer nada")
 
@@ -103,11 +103,22 @@ class Tabuleiro:
 
         self.atualizar_todas_as_listas()
 
-        if isinstance(peca_movida, Peao):
+        if isinstance(peca_movida, Peao) and not simulacao:
             peca_movida.ja_movimentou = True
 
         return peca_tomada
     
+    def voltar_movimento(self, coordenada_origem: Coordenada, coordenada_destino: Coordenada, peca_tomada: Peca | None):
+        peca_movimentada = self.get_peca_na_posicao(coordenada_destino)
+
+        self.matriz_pecas[coordenada_destino.linha][coordenada_destino.coluna] = peca_tomada
+        self.matriz_pecas[coordenada_origem.linha][coordenada_origem.coluna] = peca_movimentada
+
+        if peca_movimentada is not None:
+            peca_movimentada.coordenada_atual = coordenada_origem
+
+        self.atualizar_todas_as_listas()
+
     def atualizar_todas_as_listas(self):
         for i in range(8):
             for j in range(8):
