@@ -103,8 +103,11 @@ class Tabuleiro:
 
         self.atualizar_todas_as_listas()
 
-        if isinstance(peca_movida, Peao) and not simulacao:
-            peca_movida.ja_movimentou = True
+        if isinstance(peca_movida, Peao):
+            peca_movida.atualizar_lista_de_coordenadas_para_tomada()
+            
+            if not simulacao:
+                peca_movida.ja_movimentou = True
 
         return peca_tomada
     
@@ -127,19 +130,27 @@ class Tabuleiro:
                     peca.lista_de_posssiveis_movimentos.clear()
                     peca.atualizar_lista_de_possiveis_coordenadas()
 
-    def get_rei_preto(self):
+    def get_rei(self, cor: ut.EnumCor) -> Rei:
+        """
+        Retorna um rei de uma cor
+        """
         for i in range(8):
             for j in range(8):
-                peca = self.get_peca_na_posicao(Coordenada(i,j))
-                if isinstance(peca, Rei) and peca.cor == ut.EnumCor.PRETO:
+                peca = self.get_peca_na_posicao(Coordenada(i, j))
+                if isinstance(peca, Rei) and peca.cor == cor:
                     return peca
                 
-    def get_rei_branco(self):
-        for i in range(8):
-            for j in range(8):
-                peca = self.get_peca_na_posicao(Coordenada(i,j))
-                if isinstance(peca, Rei) and peca.cor == ut.EnumCor.BRANCO:
-                    return peca
+    def get_rei_preto(self) -> Rei:
+        """
+        Retorna a instância de rei preto no tabuleiro
+        """
+        return self.get_rei(ut.EnumCor.PRETO)
+
+    def get_rei_branco(self) -> Rei:
+        """
+        Retorna a instância de rei branco no tabuleiro
+        """
+        return self.get_rei(ut.EnumCor.BRANCO)
                 
     def get_pecas_de_uma_cor(self, cor: ut.EnumCor):
         lista_de_pecas: list[Peca] = []
