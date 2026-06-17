@@ -70,3 +70,6 @@ class Peca(ABC):
     @abstractmethod
     def atualizar_lista_de_possiveis_coordenadas(self):
         pass
+
+    def pode_se_mover_para_ca(self, coordenada_origem: Coordenada, coordenada_destino: Coordenada)-> bool:
+        return coordenada_destino in self.lista_de_posssiveis_movimentos

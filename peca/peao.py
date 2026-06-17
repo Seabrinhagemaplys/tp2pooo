@@ -96,4 +96,29 @@ class Peao(Peca):
 
     def atualizar_lista_de_coordenadas_para_tomada_preto(self, linha_atual: int, coluna_atual: int):
         self.tentar_adicionar_tomada(linha_atual + 1, coluna_atual - 1)
-        self.tentar_adicionar_tomada(linha_atual + 1, coluna_atual + 1)    
+        self.tentar_adicionar_tomada(linha_atual + 1, coluna_atual + 1)
+
+    def pode_se_mover_para_ca(self, coordenada_destino: Coordenada) -> bool:
+
+        self.atualizar_lista_de_coordenadas_para_tomada()
+        if coordenada_destino in self.lista_de_posssiveis_movimentos:
+            if self.tabuleiro.get_peca_na_posicao(coordenada_destino) != None:
+                return False
+            else:
+                return True
+            
+        if coordenada_destino in self.movimentos_para_tomadas:
+            if self.tabuleiro.get_peca_na_posicao(coordenada_destino) == None:
+                return False
+            else:
+                if self.tabuleiro.get_peca_na_posicao(coordenada_destino).cor == self.cor:
+                    return False
+                else:
+                    return True
+                
+        return False
+    
+            
+            
+
+        

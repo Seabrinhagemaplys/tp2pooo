@@ -76,7 +76,7 @@ class Controladora:
             print(f"A cor da peça é {peca_a_ser_movida.cor} mas é a vez de {self.lado}")
             return False
         
-        if not (coordenada_destino in peca_a_ser_movida.lista_de_posssiveis_movimentos):
+        if not (peca_a_ser_movida.pode_se_mover_para_ca(coordenada_destino)):
             print("A coordenada de destino não está na lista de possíveis movimentos da peça")
             return False
         
