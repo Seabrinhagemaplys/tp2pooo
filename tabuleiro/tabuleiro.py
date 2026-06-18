@@ -176,6 +176,9 @@ class Tabuleiro:
         return lista_de_pecas
     
     def promocao(self, peca_a_trocar: Peao):
+        """
+        Promove um peão para outra peça
+        """
         print("Digite 1 para Promoção à Rainha")
         print("Digite 2 para Promoção à Torre")
         print("Digite 3 para Promoção à Bispo")
