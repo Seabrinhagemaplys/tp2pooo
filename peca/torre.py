@@ -10,6 +10,7 @@ from coordenada.coordenada import Coordenada
 
 class Torre(Peca):
     def __init__(self, cor: ut.EnumCor, coordenada_inicial: Coordenada, tabuleiro: Tabuleiro):
+        self.ja_movimentou = False
         super().__init__(
             caractere= ut.EnumCaracteres.TORRE_BRANCO if cor == ut.EnumCor.BRANCO else ut.EnumCaracteres.TORRE_PRETO,
             cor=cor,

@@ -109,6 +109,12 @@ class Tabuleiro:
             if not simulacao:
                 peca_movida.ja_movimentou = True
 
+        if isinstance(peca_movida, Peao):
+                peca_movida.ja_movimentou = True
+
+        if isinstance(peca_movida, Rei):
+            peca_movida.ja_movimentou = True
+
         return peca_tomada
     
     def voltar_movimento(self, coordenada_origem: Coordenada, coordenada_destino: Coordenada, peca_tomada: Peca | None):
@@ -195,3 +201,7 @@ class Tabuleiro:
         self.matriz_pecas[coordenada_da_peca.linha][coordenada_da_peca.coluna] = nova_peca
         self.atualizar_todas_as_listas()
 
+
+    def roque(self, peca_torre: Peao, peca_rei: Rei):
+        if not(peca_rei.ja_movimentou) and not(peca_torre.ja_movimentou):
+            pass
