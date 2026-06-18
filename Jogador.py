@@ -1,14 +1,13 @@
-from datetime import datetime, timedelta # utilizado para calcular o tempo de cada jogada
+
 
 class Jogador:
 
-    def __init__(self, nome: str, id: int):
+    def __init__(self, nome: str, id: int, desistencia: bool = False):
         self.__nome = nome
         self.__id = id
         self.__lista_pecas = []
         self.__lista_movimentos = []
-        self.__tempo_restante = timedelta(minutes=10)  # Exemplo: 10 minutos por jogador
-        self.__turno_iniciado_em = None  # para calcular o tempo gasto em cada
+        self.__desistencia = desistencia
 
     # ── Getters e Setters: nome ──────────────────────────────────────────────
 
@@ -61,34 +60,17 @@ class Jogador:
         self.__lista_movimentos.append(movimento.strip())
 
 
-      # ── tempo ─────────────────────────────────────────────────────────────────
 
+    # ── Getter e Setter da Desistência ────────────────────────────────────────────────────────
     @property
-    def tempo_restante(self) -> timedelta:
-        return self.__tempo_restante
-
-    def iniciar_turno(self):
-        self.__turno_iniciado_em = datetime.now()
-
-    def encerrar_turno(self):
-        if self.__turno_iniciado_em is None:
-            raise RuntimeError("Turno não foi iniciado corretamente. Chame iniciar_turno() primeiro.")
-
-        tempo_gasto = datetime.now() - self.__turno_iniciado_em
-        self.__tempo_restante -= tempo_gasto
-
-        if self.__tempo_restante < timedelta(0):
-            self.__tempo_restante = timedelta(0)
-
-        self.__turno_iniciado_em = None  # reseta para o próximo turno
-
-    def tempo_esgotado(self) -> bool:
-        return self.__tempo_restante <= timedelta(0)
-
-    def tempo_formatado(self) -> str:
-        total_segundos = int(self.__tempo_restante.total_seconds())
-        minutos, segundos = divmod(total_segundos, 60)
-        return f"{minutos:02d}:{segundos:02d}"
+    def desistencia(self) -> bool:
+        return self.__desistencia   
+    
+    @desistencia.setter
+    def desistencia(self, valor: bool):
+        if not isinstance(valor, bool):
+            raise ValueError("A desistência deve ser um valor booleano.")
+        self.__desistencia = valor
 
 
     # ── Representação ────────────────────────────────────────────────────────
