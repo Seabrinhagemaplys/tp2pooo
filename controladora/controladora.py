@@ -2,8 +2,14 @@ from tabuleiro.tabuleiro import Tabuleiro
 from coordenada.coordenada import Coordenada
 from peca.peca import Peca
 from peca.peao import Peao
-import utils.utils as ut
 from peca.rei import Rei
+from peca.rainha import Rainha
+from peca.torre import Torre
+from peca.cavalo import Cavalo
+from peca.bispo import Bispo
+
+
+import utils.utils as ut
 
 class Controladora:
     def __init__(self):
@@ -130,23 +136,11 @@ class Controladora:
             # Montar a jogada que será realizada e executá-la
             coordenada_origem, coordenada_destino = self.montar_jogada()
             self.tabuleiro.mover_peca(coordenada_origem, coordenada_destino)
-
             peca_movida = self.tabuleiro.get_peca_na_posicao(coordenada_destino)
 
+            # checar promoção para um peão
             if isinstance(peca_movida, Peao):
-                
-                match self.lado:
-                    case ut.EnumCor.BRANCO:
-                        if(peca_movida.coordenada_atual.linha == 0):
-                            self.tabuleiro.promocao(peca_movida)
-
-                    case ut.EnumCor.PRETO:
-                        if(peca_movida.coordenada_atual.linha == 7):
-                            self.tabuleiro.promocao(peca_movida)
-            
-            tp = self.tabuleiro.get_peca_na_posicao(coordenada_destino)
-            if isinstance(tp, Peao):
-                print(tp.movimentos_para_tomadas)
+                self.promover_se_possivel(peca_movida)
 
             # Averiguar cheque
             self.cheque, self.peca_dando_cheque = self.checar_cheque()
@@ -168,6 +162,49 @@ class Controladora:
             print(f"CHEQUE MATE, GANHADOR: {self.ganhador.value}")
         else:
             print("Afogou")
+
+    def promover_se_possivel(self, peca_movida: Peao):
+        """
+        Checa se é possível promover um peão e a promove case seja
+        """
+        match self.lado:
+            case ut.EnumCor.BRANCO:
+                if(peca_movida.coordenada_atual.linha == 0):
+                    self.promocao(peca_movida)
+
+            case ut.EnumCor.PRETO:
+                if(peca_movida.coordenada_atual.linha == 7):
+                    self.promocao(peca_movida)
+
+    def promocao(self, peca_movida: Peao):
+        """
+        Promove um peão para uma rainha, torre, bispo ou cavalo.
+        """
+        print("Digite 1 para Promoção à Rainha,")
+        print("Digite 2 para Promoção à Torre,")
+        print("Digite 3 para Promoção à Bispo,")
+        print("Digite 4 para promoção ao Cavalo.")
+
+        coordenada_da_peca: Coordenada = peca_movida.coordenada_atual
+        cor_da_peca: ut.EnumCor = peca_movida.cor
+
+        entrada = int(input("Insira aqui:"))
+
+        match (entrada):
+            case 1:
+                self.tabuleiro.promocao(peca_movida, Rainha(cor_da_peca, coordenada_da_peca, self.tabuleiro))
+
+            case 2:
+                self.tabuleiro.promocao(peca_movida, Torre(cor_da_peca, coordenada_da_peca, self.tabuleirolf))
+
+            case 3: 
+                self.tabuleiro.promocao(peca_movida, Bispo(cor_da_peca, coordenada_da_peca, self.tabuleiro))
+
+            case 4:
+                self.tabuleiro.promocao(peca_movida, Cavalo(cor_da_peca, coordenada_da_peca, self.tabuleiro))
+
+            case _:
+                pass
 
     def checar_cheque(self) -> tuple [bool, Peca| None]:
         """

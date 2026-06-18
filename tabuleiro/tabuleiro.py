@@ -109,9 +109,6 @@ class Tabuleiro:
             if not simulacao:
                 peca_movida.ja_movimentou = True
 
-        if isinstance(peca_movida, Peao):
-                peca_movida.ja_movimentou = True
-
         if isinstance(peca_movida, Rei):
             peca_movida.ja_movimentou = True
 
@@ -175,33 +172,11 @@ class Tabuleiro:
 
         return lista_de_pecas
     
-    def promocao(self, peca_a_trocar: Peao):
+    def promocao(self, peca_a_trocar: Peao, nova_peca: Rainha | Torre | Bispo | Cavalo):
         """
         Promove um peão para outra peça
         """
-        print("Digite 1 para Promoção à Rainha")
-        print("Digite 2 para Promoção à Torre")
-        print("Digite 3 para Promoção à Bispo")
-        print("Digite 4 para promoção ao Cavalo")
-
-        coordenada_da_peca: Coordenada = peca_a_trocar.coordenada_atual
-        cor_da_peca: ut.EnumCor = peca_a_trocar.cor
-
-        entrada = int(input("Insira aqui:"))
-
-        match (entrada):
-            case 1:
-                nova_peca = Rainha(cor_da_peca, coordenada_da_peca, self)
-            case 2:
-                nova_peca = Torre(cor_da_peca, coordenada_da_peca, self)
-            case 3: 
-                nova_peca = Bispo(cor_da_peca, coordenada_da_peca, self)
-            case 4:
-                nova_peca = Cavalo(cor_da_peca, coordenada_da_peca, self)
-            case _:
-                pass
-
-        self.matriz_pecas[coordenada_da_peca.linha][coordenada_da_peca.coluna] = nova_peca
+        self.matriz_pecas[peca_a_trocar.coordenada_atual.linha][peca_a_trocar.coordenada_atual.coluna] = nova_peca
         self.atualizar_todas_as_listas()
 
 
