@@ -220,7 +220,10 @@ class Controladora:
                 if peca is None:
                     continue
 
-                if ((coordenadas_rei_branco in peca.lista_de_posssiveis_movimentos) and (peca.cor == ut.EnumCor.PRETO)) or ((coordenadas_rei_preto in peca.lista_de_posssiveis_movimentos) and (peca.cor == ut.EnumCor.BRANCO)):
+                rei_branco_em_cheque: bool = peca.pode_se_mover_para_ca(coordenadas_rei_branco) and peca.cor == ut.EnumCor.PRETO
+                rei_preto_em_cheque: bool = peca.pode_se_mover_para_ca(coordenadas_rei_preto) and peca.cor == ut.EnumCor.BRANCO
+
+                if rei_branco_em_cheque or rei_preto_em_cheque:
                     return True, peca
                     
         return False, None
@@ -241,7 +244,7 @@ class Controladora:
                 if peca.cor == lado:
                     continue
 
-                if coordenadas_rei in peca.lista_de_posssiveis_movimentos:
+                if peca.pode_se_mover_para_ca(coordenadas_rei):
                     return True
 
         return False
