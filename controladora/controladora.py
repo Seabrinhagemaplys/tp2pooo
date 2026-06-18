@@ -92,9 +92,6 @@ class Controladora:
             print("Essa jogada deixa seu rei em cheque")
             return False
         
-        # checagens exclusivas de peão
-        # if isinstance(peca_a_ser_movida, Peao):
-        #     pass
         
         return True
 
@@ -133,6 +130,19 @@ class Controladora:
             # Montar a jogada que será realizada e executá-la
             coordenada_origem, coordenada_destino = self.montar_jogada()
             self.tabuleiro.mover_peca(coordenada_origem, coordenada_destino)
+
+            peca_movida = self.tabuleiro.get_peca_na_posicao(coordenada_destino)
+
+            if isinstance(peca_movida, Peao):
+                
+                match self.lado:
+                    case ut.EnumCor.BRANCO:
+                        if(peca_movida.coordenada_atual.linha == 0):
+                            self.tabuleiro.promocao(peca_movida)
+
+                    case ut.EnumCor.PRETO:
+                        if(peca_movida.coordenada_atual.linha == 7):
+                            self.tabuleiro.promocao(peca_movida)
             
             tp = self.tabuleiro.get_peca_na_posicao(coordenada_destino)
             if isinstance(tp, Peao):
