@@ -109,7 +109,7 @@ class Tabuleiro:
             if not simulacao:
                 peca_movida.ja_movimentou = True
 
-        if isinstance(peca_movida, Rei):
+        if (isinstance(peca_movida, Rei) or isinstance(peca_movida, Torre)) and (not simulacao):
             peca_movida.ja_movimentou = True
 
         return peca_tomada
