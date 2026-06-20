@@ -392,7 +392,7 @@ class Controladora:
         """
         Verifica se o rei de um lado está em chque
         """
-        coordenadas_rei = self.tabuleiro.get_rei(self.lado).coordenada_atual
+        coordenadas_rei = self.tabuleiro.get_rei(lado).coordenada_atual
 
         for i in range(8):
             for j in range(8):
@@ -416,7 +416,16 @@ class Controladora:
         for peca in self.tabuleiro.get_pecas_de_uma_cor(lado):
             origem = peca.coordenada_atual
 
-            for destino in peca.lista_de_posssiveis_movimentos:
+            lista_total_de_movimentos = peca.lista_de_posssiveis_movimentos
+
+            if isinstance(peca, Peao):
+                peca.atualizar_lista_de_coordenadas_para_tomada()
+                lista_total_de_movimentos = lista_total_de_movimentos + peca.movimentos_para_tomadas
+
+            for destino in lista_total_de_movimentos:
+                if not peca.pode_se_mover_para_ca(destino):
+                    continue
+
                 peca_tomada = self.tabuleiro.mover_peca(origem, destino, simulacao=True)
                 continua_em_cheque = self.rei_em_cheque(lado)
                 self.tabuleiro.voltar_movimento(origem, destino, peca_tomada)
