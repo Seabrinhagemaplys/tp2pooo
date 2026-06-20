@@ -193,7 +193,7 @@ class Controladora:
 
         roque_permitido_a_esquerda: bool = True
         roque_permitido_a_direita: bool = True
-        rei = self.tabuleiro.get_rei_branco() if self.lado == ut.EnumCor.BRANCO else self.tabuleiro.get_rei_preto()
+        rei = self.tabuleiro.get_rei(self.lado)
         torre_esquerda: Peca = self.tabuleiro.get_peca_na_posicao(Coordenada(7, 0)) if self.lado == ut.EnumCor.BRANCO else self.tabuleiro.get_peca_na_posicao(Coordenada(0, 0))
         torre_direita: Peca = self.tabuleiro.get_peca_na_posicao(Coordenada(7, 7)) if self.lado == ut.EnumCor.BRANCO else self.tabuleiro.get_peca_na_posicao(Coordenada(0, 7))
         torre_esquerda_ja_movimentou: bool = torre_esquerda.ja_movimentou if isinstance(torre_esquerda, Torre) else True
@@ -392,7 +392,7 @@ class Controladora:
         """
         Verifica se o rei de um lado está em chque
         """
-        coordenadas_rei = ((self.tabuleiro.get_rei_branco().coordenada_atual) if lado == ut.EnumCor.BRANCO else (self.tabuleiro.get_rei_preto().coordenada_atual))
+        coordenadas_rei = self.tabuleiro.get_rei(self.lado).coordenada_atual
 
         for i in range(8):
             for j in range(8):
