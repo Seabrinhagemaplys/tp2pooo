@@ -147,6 +147,9 @@ class Controladora:
         return coordenada_origem, coordenada_destino
     
     def roque_possivel(self):
+        """
+        Checa se há possibilidade de fazer o roque, retornando dois booleanos, um indicando se é possível fazer o roque para a esquerda e outra para a direita
+        """
         def coordenadas_vazias(lista_de_coordenadas: list[Coordenada]):
             """
             Checa se todas as coordenadas passadas não possuem peças em suas posições
