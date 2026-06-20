@@ -1,4 +1,5 @@
 from controladora.controladora import Controladora
 
-a = Controladora()
-a.iniciar()
+if __name__ == "__main__":
+    a = Controladora()
+    a.iniciar()
