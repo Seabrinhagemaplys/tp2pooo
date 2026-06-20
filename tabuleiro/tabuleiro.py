@@ -179,7 +179,28 @@ class Tabuleiro:
         self.matriz_pecas[peca_a_trocar.coordenada_atual.linha][peca_a_trocar.coordenada_atual.coluna] = nova_peca
         self.atualizar_todas_as_listas()
 
+    def roque_a_esquerda(self, lado: ut.EnumCor):
+        match (lado):
+            case ut.EnumCor.BRANCO:
+                self.mover_peca(self.get_rei_branco().coordenada_atual, Coordenada(7, 2))
+                self.mover_peca(Coordenada(7, 0), Coordenada(7, 3))
 
-    def roque(self, peca_torre: Peao, peca_rei: Rei):
-        if not(peca_rei.ja_movimentou) and not(peca_torre.ja_movimentou):
-            pass
+            case ut.EnumCor.PRETO:
+                self.mover_peca(self.get_rei_preto().coordenada_atual, Coordenada(0, 6))
+                self.mover_peca(Coordenada(0, 7), Coordenada(0, 5))
+
+            case _:
+                pass
+
+    def roque_a_direita(self, lado: ut.EnumCor):
+        match (lado):
+            case ut.EnumCor.BRANCO:
+                self.mover_peca(self.get_rei_branco().coordenada_atual, Coordenada(7, 6))
+                self.mover_peca(Coordenada(7, 7), Coordenada(7, 5))
+
+            case ut.EnumCor.PRETO:
+                self.mover_peca(self.get_rei_preto().coordenada_atual, Coordenada(0, 2))
+                self.mover_peca(Coordenada(0, 0), Coordenada(0, 3))
+
+            case _:
+                pass

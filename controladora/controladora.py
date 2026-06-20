@@ -8,7 +8,6 @@ from peca.torre import Torre
 from peca.cavalo import Cavalo
 from peca.bispo import Bispo
 
-
 import utils.utils as ut
 
 class Controladora:
@@ -45,7 +44,7 @@ class Controladora:
         entrada: str = ""
         
         while not entrada_valida(entrada):
-            entrada = input(string)
+            entrada = input(string).strip()
 
         return int(entrada.split(" ")[0]) - 1, int(entrada.split(" ")[1]) - 1
 
@@ -107,19 +106,175 @@ class Controladora:
         """
         repetir = True
 
+        coordenada_origem, coordenada_destino = None, None
+
         while repetir:
             try:
-                linha_inicial, coluna_inicial = self.coletar_entradas("Insira as coordenadas da peça que quer mover (formato: '[linha] [coluna]', onde linha e coluna são números, de 1 a 8): ")
-                linha_final, coluna_final = self.coletar_entradas("Insira as coordenadas de onde você quer mover a peça (formato: '[linha] [coluna]', onde linha e coluna são números, de 1 a 8): ")
-                coordenada_origem: Coordenada = Coordenada(linha_inicial, coluna_inicial)
-                coordenada_destino: Coordenada = Coordenada(linha_final, coluna_final)
-                if (self.validar_jogada(coordenada_origem, coordenada_destino)):
-                    repetir = False
+                tipo_de_jogada: str = "j"
+                roque_possivel_a_esquerda, roque_possivel_a_direita = self.roque_possivel()
+
+                if any([roque_possivel_a_esquerda, roque_possivel_a_direita]):
+                    if roque_possivel_a_esquerda:
+                        print("Para rocar a esquerda, digite re")
+                    if roque_possivel_a_direita:
+                        print("Para rocar a direita, digite rd")
+                    print("Para realizar um lance normal, digite j")
+
+                    tipo_de_jogada = input("Insira aqui o tipo de jogada que deseja fazer: ").strip().lower()
+
+                match (tipo_de_jogada):
+                    case "j":
+                        linha_inicial, coluna_inicial = self.coletar_entradas("Insira as coordenadas da peça que quer mover (formato: '[linha] [coluna]', onde linha e coluna são números, de 1 a 8): ")
+                        linha_final, coluna_final = self.coletar_entradas("Insira as coordenadas de onde você quer mover a peça (formato: '[linha] [coluna]', onde linha e coluna são números, de 1 a 8): ")
+                        coordenada_origem: Coordenada = Coordenada(linha_inicial, coluna_inicial)
+                        coordenada_destino: Coordenada = Coordenada(linha_final, coluna_final)
+                        if (self.validar_jogada(coordenada_origem, coordenada_destino)):
+                            repetir = False
+
+                    case "re":
+                        self.tabuleiro.roque_a_esquerda(self.lado)
+                        repetir = False
+
+                    case "rd":
+                        self.tabuleiro.roque_a_direita(self.lado)
+                        repetir = False
+
+                    case _:
+                        pass
             except Exception as e:
                 pass
                 
-
         return coordenada_origem, coordenada_destino
+    
+    def roque_possivel(self):
+        def coordenadas_vazias(lista_de_coordenadas: list[Coordenada]):
+            """
+            Checa se todas as coordenadas passadas não possuem peças em suas posições
+            """
+            for coordenada in lista_de_coordenadas:
+                if self.tabuleiro.get_peca_na_posicao(coordenada) is not None:
+                    return False
+                
+            return True
+
+        def rei_passa_por_cheque(lista_de_coordenadas: list[Coordenada]):
+            """
+            Verifica se o rei passa por cheque enquanto realiza o roque
+            """
+            for coordenada in lista_de_coordenadas:
+                rei = self.tabuleiro.get_rei(self.lado)
+                origem = rei.coordenada_atual
+                peca_tomada = self.tabuleiro.mover_peca(origem, coordenada, simulacao=True)
+                em_cheque = self.rei_em_cheque(self.lado)
+                self.tabuleiro.voltar_movimento(origem, coordenada, peca_tomada)
+
+                if em_cheque:
+                    return True
+                
+            return False
+
+        def checar_roque(casas_vazias: list[Coordenada], casas_do_rei: list[Coordenada], torre_ja_movimentou: bool):
+            """
+            Checa se o roque é possível para uma lista de coordenadas entre o rei e a torre e sabendo se a torre já se movimentou ou não
+            """
+            if not coordenadas_vazias(casas_vazias):
+                return False
+            
+            if torre_ja_movimentou:
+                return False
+            
+            if rei_passa_por_cheque(casas_do_rei):
+                return False
+            
+            return True
+
+        roque_permitido_a_esquerda: bool = True
+        roque_permitido_a_direita: bool = True
+        rei = self.tabuleiro.get_rei_branco() if self.lado == ut.EnumCor.BRANCO else self.tabuleiro.get_rei_preto()
+        torre_esquerda: Peca = self.tabuleiro.get_peca_na_posicao(Coordenada(7, 0)) if self.lado == ut.EnumCor.BRANCO else self.tabuleiro.get_peca_na_posicao(Coordenada(0, 0))
+        torre_direita: Peca = self.tabuleiro.get_peca_na_posicao(Coordenada(7, 7)) if self.lado == ut.EnumCor.BRANCO else self.tabuleiro.get_peca_na_posicao(Coordenada(0, 7))
+        torre_esquerda_ja_movimentou: bool = torre_esquerda.ja_movimentou if isinstance(torre_esquerda, Torre) else True
+        torre_direita_ja_movimentou: bool = torre_direita.ja_movimentou if isinstance(torre_direita, Torre) else True
+
+        if self.rei_em_cheque(self.lado):
+            return False, False
+
+        if rei.ja_movimentou:
+            roque_permitido_a_esquerda, roque_permitido_a_direita = False, False
+
+        if not isinstance(torre_esquerda, Torre):
+            roque_permitido_a_esquerda = False
+
+        if not isinstance(torre_direita, Torre):
+            roque_permitido_a_direita = False
+
+        if not roque_permitido_a_esquerda and not roque_permitido_a_direita:
+            return False, False
+
+        match (self.lado):
+            case ut.EnumCor.BRANCO:
+                # roque longo
+                if not checar_roque(
+                    torre_ja_movimentou=torre_esquerda_ja_movimentou,
+                    casas_vazias=[
+                        Coordenada(7, 1),
+                        Coordenada(7, 2),
+                        Coordenada(7, 3)
+                    ],
+                    casas_do_rei=[
+                        Coordenada(7, 3),
+                        Coordenada(7, 2)
+                    ]
+                ):
+                    roque_permitido_a_esquerda = False
+
+                # roque curto
+                if not checar_roque(
+                    torre_ja_movimentou=torre_direita_ja_movimentou,
+                    casas_vazias=[
+                        Coordenada(7, 5),
+                        Coordenada(7, 6)
+                    ],
+                    casas_do_rei=[
+                        Coordenada(7, 5),
+                        Coordenada(7, 6)
+                    ]
+                ):
+                    roque_permitido_a_direita = False
+
+            case ut.EnumCor.PRETO:
+                # roque curto
+                if not checar_roque(
+                    torre_ja_movimentou=torre_direita_ja_movimentou,
+                    casas_vazias=[
+                        Coordenada(0, 5),
+                        Coordenada(0, 6)
+                    ],
+                    casas_do_rei=[
+                        Coordenada(0, 5),
+                        Coordenada(0, 6)
+                    ]
+                ):
+                    roque_permitido_a_esquerda = False
+
+                # roque longo
+                if not checar_roque(
+                    torre_ja_movimentou=torre_esquerda_ja_movimentou,
+                    casas_vazias=[
+                        Coordenada(0, 1),
+                        Coordenada(0, 2),
+                        Coordenada(0, 3)
+                    ],
+                    casas_do_rei=[
+                        Coordenada(0, 3),
+                        Coordenada(0, 2)
+                    ]
+                ):
+                    roque_permitido_a_direita = False
+                
+        return roque_permitido_a_esquerda, roque_permitido_a_direita 
+        
+
 
     def iniciar(self):
         """
@@ -135,12 +290,14 @@ class Controladora:
 
             # Montar a jogada que será realizada e executá-la
             coordenada_origem, coordenada_destino = self.montar_jogada()
-            self.tabuleiro.mover_peca(coordenada_origem, coordenada_destino)
-            peca_movida = self.tabuleiro.get_peca_na_posicao(coordenada_destino)
 
-            # checar promoção para um peão
-            if isinstance(peca_movida, Peao):
-                self.promover_se_possivel(peca_movida)
+            if coordenada_origem is not None and coordenada_destino is not None:
+                self.tabuleiro.mover_peca(coordenada_origem, coordenada_destino)
+                peca_movida = self.tabuleiro.get_peca_na_posicao(coordenada_destino)
+
+                # checar promoção para um peão
+                if isinstance(peca_movida, Peao):
+                    self.promover_se_possivel(peca_movida)
 
             # Averiguar cheque
             self.cheque, self.peca_dando_cheque = self.checar_cheque()
@@ -195,7 +352,7 @@ class Controladora:
                 self.tabuleiro.promocao(peca_movida, Rainha(cor_da_peca, coordenada_da_peca, self.tabuleiro))
 
             case 2:
-                self.tabuleiro.promocao(peca_movida, Torre(cor_da_peca, coordenada_da_peca, self.tabuleirolf))
+                self.tabuleiro.promocao(peca_movida, Torre(cor_da_peca, coordenada_da_peca, self.tabuleiro))
 
             case 3: 
                 self.tabuleiro.promocao(peca_movida, Bispo(cor_da_peca, coordenada_da_peca, self.tabuleiro))
