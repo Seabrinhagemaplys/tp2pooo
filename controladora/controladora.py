@@ -276,8 +276,6 @@ class Controladora:
                     roque_permitido_a_direita = False
                 
         return roque_permitido_a_esquerda, roque_permitido_a_direita 
-        
-
 
     def iniciar(self):
         """

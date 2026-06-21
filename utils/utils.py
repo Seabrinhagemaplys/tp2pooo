@@ -7,18 +7,18 @@ class EnumCor(Enum):
     PRETO = "Preto"
 
 class EnumCaracteres(Enum):
-    PEAO_BRANCO = "♙"
-    PEAO_PRETO = "♟"
-    CAVALO_BRANCO = "♘"
-    CAVALO_PRETO = "♞"
-    BISPO_BRANCO = "♗"
-    BISPO_PRETO = "♝"
-    TORRE_BRANCO = "♖"
-    TORRE_PRETO = "♜"
-    RAINHA_BRANCO = "♕"
-    RAINHA_PRETO = "♛"
-    REI_BRANCO = "♔"
-    REI_PRETO = "♚"
+    PEAO_BRANCO = "♟"
+    PEAO_PRETO = "♙"
+    CAVALO_BRANCO = "♞"
+    CAVALO_PRETO = "♘"
+    BISPO_BRANCO = "♝"
+    BISPO_PRETO = "♗"
+    TORRE_BRANCO = "♜"
+    TORRE_PRETO = "♖"
+    RAINHA_BRANCO = "♛"
+    RAINHA_PRETO = "♕"
+    REI_BRANCO = "♚"
+    REI_PRETO = "♔"
 
 
 def validar_string(string: str) -> bool:
